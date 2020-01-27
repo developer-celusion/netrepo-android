@@ -42,6 +42,7 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.CertificatePinner;
 import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
 import okhttp3.FormBody;
@@ -85,6 +86,7 @@ public class NetworkRepository implements INetworkRepository {
     private boolean dateToUTC = false;
     private boolean addConnectionSpecs = false;
     private boolean addTLSPermissionBelowLollypop = false;
+    private CertificatePinner certificatePinner;
 
 
     private NetworkRepository(Context context) {
@@ -184,7 +186,9 @@ public class NetworkRepository implements INetworkRepository {
                     .retryOnConnectionFailure(allowRetry)
                     .addInterceptor(new OAuth2TokenInterceptor());
         }
-
+        if(this.certificatePinner != null) {
+            clientBuilder.certificatePinner(this.certificatePinner);
+        }
         okHttpClient = clientBuilder.build();
 
         checkLoggedIn();
@@ -251,7 +255,12 @@ public class NetworkRepository implements INetworkRepository {
         this.setup(timeoutInSeconds, retryRequest);
     }
 
-
+    private void setup(Builder builder) {
+        this.addConnectionSpecs = builder.connectionSpecs;
+        this.setCustomStoreName(builder.customNetPrefItem);
+        this.certificatePinner = builder.certificatePinner;
+        this.setup(builder.defaultTimeout, builder.allowRetry);
+    }
 
     public void setDateFormat(final String dateFormat) {
         this.dateFormat = dateFormat != null ? dateFormat : V3_FORMAT;
@@ -1360,6 +1369,51 @@ public class NetworkRepository implements INetworkRepository {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    public static final class Builder {
+
+        private int defaultTimeout = 60; // SECONDS
+        private boolean allowRetry = false;
+        private boolean connectionSpecs = false;
+        private String customNetPrefItem = NET_PREF_ITEM;
+        private CertificatePinner certificatePinner;
+
+        public Builder timeout(int value) {
+            this.defaultTimeout = value;
+            return this;
+        }
+
+        public Builder retry(boolean value) {
+            this.allowRetry = value;
+            return this;
+        }
+
+        public Builder allowConnectionSpecs(boolean value) {
+            this.connectionSpecs = value;
+            return this;
+        }
+
+        public Builder setCustomStoreName(final String prefStoreName) {
+            if (!TextUtils.isEmpty(prefStoreName)) {
+                this.customNetPrefItem = prefStoreName;
+            } else {
+                this.customNetPrefItem = NET_PREF_ITEM;
+            }
+            return this;
+        }
+
+        public Builder setCertificatePinner(CertificatePinner value) {
+            this.certificatePinner = value;
+            return this;
+        }
+
+        public NetworkRepository build(Context context) {
+            NetworkRepository.getInstance(context).setup(this);
+            return NetworkRepository.getInstance(context);
+        }
+
 
     }
 
