@@ -3,7 +3,7 @@ apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
 
 def packageName = 'com.mobiliteam'
-def libraryVersion = '0.5.0'
+def libraryVersion = '0.5.1'
 def appId = 'networkrepo'
 
 
