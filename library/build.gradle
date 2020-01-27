@@ -3,7 +3,7 @@ apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
 
 def packageName = 'com.mobiliteam'
-def libraryVersion = '0.4.5'
+def libraryVersion = '0.5.1'
 def appId = 'networkrepo'
 
 
@@ -14,8 +14,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 45
-        versionName "0.4.5"
+        versionCode 51
+        versionName "0.5.1"
     }
 }
 
