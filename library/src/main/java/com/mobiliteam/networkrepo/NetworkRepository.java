@@ -1404,6 +1404,13 @@ public class NetworkRepository implements INetworkRepository {
             return this;
         }
 
+        /*
+        * Link - https://medium.com/@appmattus/android-security-ssl-pinning-1db8acb6621e
+        * CertificatePinner certPinner = new CertificatePinner.Builder()
+        .add("appmattus.com",
+              "sha256/4hw5tz+scE+TW+mlai5YipDfFWn1dqvfLG+nU7tq1V8=")
+        .build();
+        * */
         public Builder setCertificatePinner(CertificatePinner value) {
             this.certificatePinner = value;
             return this;
