@@ -87,7 +87,7 @@ public class NetworkRepository implements INetworkRepository {
     private boolean addConnectionSpecs = false;
     private boolean addTLSPermissionBelowLollypop = false;
     private CertificatePinner certificatePinner;
-
+    private LinkedHashMap<String, String> customHeaders = new LinkedHashMap<>();
 
     private NetworkRepository(Context context) {
         this.context = context;
@@ -306,7 +306,16 @@ public class NetworkRepository implements INetworkRepository {
         if (tokenResponse != null) {
             builder.add("Authorization", tokenResponse.getTokenType() + " " + tokenResponse.getAccessToken());
         }
+        if(customHeaders != null && !customHeaders.isEmpty()) {
+            for(String key: customHeaders.keySet()) {
+                builder.add(key, customHeaders.get(key).toString());
+            }
+        }
         return builder.build();
+    }
+
+    public void setCustomHeaders(LinkedHashMap<String, String> customHeaders) {
+        this.customHeaders = customHeaders;
     }
 
     /**
