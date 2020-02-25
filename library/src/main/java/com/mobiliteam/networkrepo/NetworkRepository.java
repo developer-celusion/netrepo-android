@@ -87,7 +87,7 @@ public class NetworkRepository implements INetworkRepository {
     private boolean addConnectionSpecs = false;
     private boolean addTLSPermissionBelowLollypop = false;
     private CertificatePinner certificatePinner;
-
+    private LinkedHashMap<String, String> customHeaders = new LinkedHashMap<>();
 
     private NetworkRepository(Context context) {
         this.context = context;
@@ -306,7 +306,16 @@ public class NetworkRepository implements INetworkRepository {
         if (tokenResponse != null) {
             builder.add("Authorization", tokenResponse.getTokenType() + " " + tokenResponse.getAccessToken());
         }
+        if(customHeaders != null && !customHeaders.isEmpty()) {
+            for(String key: customHeaders.keySet()) {
+                builder.add(key, customHeaders.get(key).toString());
+            }
+        }
         return builder.build();
+    }
+
+    public void setCustomHeaders(LinkedHashMap<String, String> customHeaders) {
+        this.customHeaders = customHeaders;
     }
 
     /**
@@ -381,6 +390,54 @@ public class NetworkRepository implements INetworkRepository {
                 }
             }
         });
+    }
+
+    public void logout(final String url, LinkedHashMap<String, String> params, LinkedHashMap<String, String> headers, final IConnectionListener listener) {
+
+        FormBody.Builder builder = new FormBody.Builder();
+        Set<String> keys = params.keySet();
+        for (String key : keys) {
+            builder.add(key, params.get(key));
+        }
+        RequestBody requestBody = builder.build();
+        Request.Builder requestBuilder = new Request.Builder()
+                .url(url)
+                .post(requestBody);
+
+        if (headers != null && headers.keySet().size() > 0) {
+            Headers.Builder headerBuilder = new Headers.Builder();
+            Set<String> headerKeys = headers.keySet();
+            for (String headerKey : headerKeys) {
+                headerBuilder.add(headerKey, headers.get(headerKey));
+            }
+            requestBuilder.headers(headerBuilder.build());
+        }
+        final NetworkResponse networkResponse = new NetworkResponse();
+        requestNewClient().newCall(requestBuilder.build()).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                networkResponse.setSuccess(false);
+                networkResponse.setErrorMsg(e.toString());
+                publishFailure(listener, call, networkResponse);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                final int code = response.code();
+                final String body = response.body().string();
+                networkResponse.setStatusCode(code);
+                boolean valid = validate(NetworkHttpMethod.GET, code);
+                networkResponse.setSuccess(valid);
+                networkResponse.setResponse("" + body);
+                networkResponse.setErrorMsg("" + body);
+                publishSuccess(listener, call, networkResponse);
+            }
+        });
+
+    }
+
+    public TokenResponse getCurrentState() {
+        return tokenResponse;
     }
 
     private void publishSuccess(final IConnectionListener listener, final Call call, final NetworkResponse networkResponse) {
