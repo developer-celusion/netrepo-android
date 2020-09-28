@@ -1005,7 +1005,7 @@ public class NetworkRepository implements INetworkRepository {
 
             final String contentType = "multipart/mixed; boundary=" + batchRequest.getBoundaryName();
 
-            RequestBody requestBody = new MultipartBody.Builder("")
+            RequestBody requestBody = new MultipartBody.Builder(batchRequest.getBoundaryName())
                     .addPart(RequestBody.create(null, batchRequest.rawBody()))
                     .build();
 
@@ -1147,7 +1147,7 @@ public class NetworkRepository implements INetworkRepository {
 
         final String contentType = "multipart/mixed; boundary=" + batchRequest.getBoundaryName();
 
-        RequestBody requestBody = new MultipartBody.Builder("")
+        RequestBody requestBody = new MultipartBody.Builder(batchRequest.getBoundaryName())
                 .addPart(RequestBody.create(null, batchRequest.rawBody()))
                 .build();
 
