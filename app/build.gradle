@@ -8,8 +8,8 @@ android {
         applicationId "com.mobiliteam.libraryexample"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 56
-        versionName "0.5.6"
+        versionCode 57
+        versionName "0.5.7"
     }
     buildTypes {
         release {
@@ -27,7 +27,7 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
 
     implementation 'com.squareup.okhttp3:okhttp:4.8.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.google.code.gson:gson:2.8.6'
     implementation project(':library')
 
 
