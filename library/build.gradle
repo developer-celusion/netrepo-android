@@ -1,15 +1,9 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'maven-publish'
-
-def packageName = 'com.mobiliteam'
-def libraryVersion = '0.5.75'
-def appId = 'networkrepo'
-
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.3"
+    //buildToolsVersion "26.0.3"
 
     defaultConfig {
         minSdkVersion 14
@@ -24,53 +18,4 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 }
 
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId packageName
-            version = libraryVersion
-            artifactId appId
-
-            // Tell maven to prepare the generated "*.aar" file for publishing
-            //artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-
-            artifact bundleRelease
-
-            pom.withXml {
-                def dependencies = asNode().appendNode('dependencies')
-                configurations.getByName("releaseCompileClasspath").getResolvedConfiguration().getFirstLevelModuleDependencies().each {
-                    def dependency = dependencies.appendNode('dependency')
-                    dependency.appendNode('groupId', it.moduleGroup)
-                    dependency.appendNode('artifactId', it.moduleName)
-                    dependency.appendNode('version', it.moduleVersion)
-                }
-            }
-        }
-    }
-}
-
-artifactory {
-    contextUrl = artifactory_contextUrl   //The base Artifactory URL if not overridden by the publisher/resolver
-    publish {
-        repository {
-            repoKey = 'mobiliteamrepo'
-            username = artifactory_user
-            password = artifactory_password
-
-        }
-
-        defaults {
-            // Tell the Artifactory Plugin which artifacts should be published to Artifactory.
-            publications('aar')
-
-            // Properties to be attached to the published artifacts.
-            properties = ['qa.level': 'basic', 'dev.team': 'core']
-            // Publish generated POM files to Artifactory (true by default)
-            publishBuildInfo = true   //Publish build-info to Artifactory (true by default)
-            publishArtifacts = true   //Publish artifacts to Artifactory (true by default)
-            publishPom = true   //Publish generated POM files to Artifactory (true by default).
-            publishIvy = true   //Publish generated Ivy descriptor files to Artifactory (true by default).
-        }
-    }
-
-}
+apply from: '../publish.gradle'
