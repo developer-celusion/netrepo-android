@@ -14,7 +14,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 57
+        versionCode 58
         versionName "0.5.7"
     }
 }
@@ -32,7 +32,7 @@ publishing {
             artifactId appId
 
             // Tell maven to prepare the generated "*.aar" file for publishing
-            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+//            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
 
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
