@@ -33,7 +33,7 @@ public class ApplicationEx extends Application {
             e.printStackTrace();
         }
 
-        NetworkRepository.getInstance(getApplicationContext()).setup(60, false,true);
+        NetworkRepository.getInstance(getApplicationContext()).setup(60, false, false);
         NetworkRepository.getInstance(getApplicationContext()).setRefreshTokenListener(new IRefreshTokenListener() {
             @Override
             public void refreshed(NetworkResponse networkResponse) {
