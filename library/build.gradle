@@ -33,7 +33,8 @@ publishing {
 
             // Tell maven to prepare the generated "*.aar" file for publishing
             //artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
-            artifact("$buildDir/outputs/aar/library.aar")
+
+            artifact bundleRelease
 
             pom.withXml {
                 def dependencies = asNode().appendNode('dependencies')
