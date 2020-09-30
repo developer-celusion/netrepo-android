@@ -8,8 +8,8 @@ android {
         applicationId "com.mobiliteam.libraryexample"
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 60
-        versionName "0.5.75"
+        versionCode 61
+        versionName "0.5.76"
     }
     buildTypes {
         release {
