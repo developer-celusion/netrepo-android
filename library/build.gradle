@@ -8,14 +8,14 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 26
-        versionCode 62
-        versionName "0.5.80"
+        versionCode 63
+        versionName "0.5.81"
     }
 }
 
 dependencies {
-    implementation 'com.squareup.okhttp3:okhttp:4.8.0'
-    implementation 'com.google.code.gson:gson:2.8.5'
+    api 'com.squareup.okhttp3:okhttp:3.10.0'
+    api 'com.google.code.gson:gson:2.8.6'
 }
 
 apply from: '../publish.gradle'
