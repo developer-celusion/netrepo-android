@@ -1005,7 +1005,7 @@ public class NetworkRepository implements INetworkRepository {
 
             final String contentType = "multipart/mixed; boundary=" + batchRequest.getBoundaryName();
 
-            RequestBody requestBody = new MultipartBody.Builder(batchRequest.getBoundaryName())
+            RequestBody requestBody = new MultipartBody.Builder("")
                     .addPart(RequestBody.create(null, batchRequest.rawBody()))
                     .build();
 
@@ -1147,7 +1147,7 @@ public class NetworkRepository implements INetworkRepository {
 
         final String contentType = "multipart/mixed; boundary=" + batchRequest.getBoundaryName();
 
-        RequestBody requestBody = new MultipartBody.Builder(batchRequest.getBoundaryName())
+        RequestBody requestBody = new MultipartBody.Builder("")
                 .addPart(RequestBody.create(null, batchRequest.rawBody()))
                 .build();
 
@@ -1391,6 +1391,7 @@ public class NetworkRepository implements INetworkRepository {
             final int code = response.code();
             if (code == ODATAHttpCodes.UNAUTHORISED.code()) {
                 synchronized (okHttpClient) {
+                    response.close(); // Close previous response inorder to make new request
                     NetworkResponse networkResponse = refreshToken();
                     if (networkResponse.isSuccess()) {
                         if (refreshTokenListener != null) {
