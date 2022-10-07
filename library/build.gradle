@@ -16,6 +16,7 @@ android {
 dependencies {
     api 'com.squareup.okhttp3:okhttp:3.10.0'
     api 'com.google.code.gson:gson:2.8.6'
+    api 'androidx.security:security-crypto:1.1.0-alpha03'
 }
 
 apply from: '../publish.gradle'

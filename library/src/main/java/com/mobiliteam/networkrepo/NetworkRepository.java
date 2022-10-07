@@ -8,6 +8,9 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mobiliteam.networkrepo.gsonadapter.CustomGsonTypeAdapter;
@@ -17,6 +20,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -92,7 +96,32 @@ public class NetworkRepository implements INetworkRepository {
     private NetworkRepository(Context context) {
         this.context = context;
         this.handler = new Handler(Looper.getMainLooper());
-        sharedpreferences = context.getSharedPreferences(NET_PREF, Context.MODE_PRIVATE);
+        //sharedpreferences = context.getSharedPreferences(NET_PREF, Context.MODE_PRIVATE);
+        initSharedPreference();
+    }
+
+    private void initSharedPreference(){
+
+        MasterKey masterKey;
+        try {
+            masterKey = new MasterKey.Builder(context, MasterKey.DEFAULT_MASTER_KEY_ALIAS)
+                    .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+                    .build();
+
+            sharedpreferences = EncryptedSharedPreferences.create(
+                    context,
+                    NET_PREF,
+                    masterKey,
+                    EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                    EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
+
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     public static synchronized NetworkRepository getInstance(Context context) {
@@ -508,7 +537,7 @@ public class NetworkRepository implements INetworkRepository {
         final String json = getGson().toJson(tokenResponse, TokenResponse.class);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         editor.putString(customNetPrefItem, json);
-        editor.commit();
+        editor.apply();
         checkLoggedIn();
     }
 
