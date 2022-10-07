@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
     //buildToolsVersion '26.0.3'
 
     defaultConfig {
         applicationId "com.mobiliteam.libraryexample"
         minSdkVersion 21
-        targetSdkVersion 26
-        versionCode 66
-        versionName "0.6.2"
+        targetSdkVersion 28
+        versionCode 67
+        versionName "0.6.3"
     }
     buildTypes {
         release {
@@ -17,19 +17,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:26.1.0'
-
     implementation project(':library')
 
-
-
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.google.android.gms:play-services-auth:20.3.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 
 }

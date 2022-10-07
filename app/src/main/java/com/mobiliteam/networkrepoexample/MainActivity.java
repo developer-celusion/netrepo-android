@@ -1,11 +1,12 @@
 package com.mobiliteam.networkrepoexample;
 
-import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.mobiliteam.networkrepo.IConnectionListener;
 import com.mobiliteam.networkrepo.NetworkRepository;
